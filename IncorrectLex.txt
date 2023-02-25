@@ -1,0 +1,47 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+int main()
+{
+ float a, b=1.122323, c, Y = 0.0;
+ int n=2, 3agh;
+
+ ciin >> n;
+ cout << n;
+
+ ccout << "Enter a : ";
+ cin >> a;
+
+ cout << "Enter b : ";
+ cin >> b;
+
+ switch (n)
+ {
+ 	case 2:
+ 	Y = (b * c) - pow(a, 2);
+ 	break;
+ 
+	kais 56 : break;
+ 
+	case 56:
+ 	Y = (b * c);
+ 	break;
+ 
+	case 7:
+ 	Y = pow(a, 2) + c;
+ 	break;
+ 
+	case 3:
+	7
+ 	Y = a - (b * c);
+ 	break;
+ 	
+	default:
+ 	Y = pow((a + b), 3);
+ 	break;
+ }
+
+ cout << "Y is : " << Y << endl;
+ 
+return 0;
+}
