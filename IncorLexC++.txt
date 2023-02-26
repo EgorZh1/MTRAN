@@ -12,18 +12,18 @@ int main()
    cout << q << endl;
    q++;
  }
-
+ n=9;
  ciin >> n;
  cout << n;
  
- coout << "Enter a : ";
+ ccout << "Enter a : ";
  cin >> a;
 
  cout << "Enter b : ";
  cin >> b;
- 
+
  for(int i = 0;i<=10;i++)
-	
+
  switch (n)
  {
  	case 2:
@@ -35,9 +35,7 @@ int main()
 	case 56:
  	Y = (b * c);
  	break;
-
  	asdasd
-
 	case 7:
  	Y = pow(a, 2) + c;
  	break;

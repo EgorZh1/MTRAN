@@ -26,6 +26,7 @@ def tokenize(code):
     curVer=''
     aply=0
     oper=0
+    idver=0
     
     tok_regex = '|'.join('(?P<%s>%s)' % pair for pair in token_specification)
     for mo in re.finditer(tok_regex, code):
@@ -38,12 +39,12 @@ def tokenize(code):
             if re.match(r'^[0-9][a-zA-Z0-9_.]*$',value):
                 if re.match(r'^\d+\.\d+$',value):
                     if aply == 1 and oper != 1:
-                        veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{curVer}','Значение':f'{value}'}
+                        veriables[idver] = {'Тип данных':f'{dataType}','Переменная':f'{curVer}','Значение':f'{value}'}
                         aply=0
                     yield 'FLOATNEW', value
                 elif re.match(r'^\d+$',value):
                     if aply == 1 and oper != 1:
-                        veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{curVer}','Значение':f'{value}'}
+                        veriables[idver] = {'Тип данных':f'{dataType}','Переменная':f'{curVer}','Значение':f'{value}'}
                         aply=0
                     yield 'INTNEW', value
                 else:
@@ -52,12 +53,15 @@ def tokenize(code):
             elif t == 1:
                 curVer=value
                 ver+=1
-                veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{value}','Значение':'0'}
+                idver=ver
+                veriables[idver] = {'Тип данных':f'{dataType}','Переменная':f'{value}','Значение':'0'}
                 yield kind, value
             elif t == 0:
                 gg=0
+                keys = list(veriables.keys())
                 for key, val in veriables.items():
                     if val['Переменная'] == value:
+                        idver= keys.index(key)+1
                         gg+=1
                 if gg == 0:
                     errors+=('MISMATCH_ID',value)
