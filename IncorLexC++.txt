@@ -1,20 +1,29 @@
 #include <iostream>
 #include <math.h>
 using namespace std;
+
 int main()
 {
  float a, b=1.122323, c, Y = 0.0;
- int n=2, 3agh;
+ int n=2, 9v;
+
+ while(int q<10)
+ {
+   cout << q << endl;
+   q++;
+ }
 
  ciin >> n;
  cout << n;
-
- ccout << "Enter a : ";
+ 
+ coout << "Enter a : ";
  cin >> a;
 
  cout << "Enter b : ";
  cin >> b;
-
+ 
+ for(int i = 0;i<=10;i++)
+	
  switch (n)
  {
  	case 2:
@@ -26,13 +35,14 @@ int main()
 	case 56:
  	Y = (b * c);
  	break;
- 
+
+ 	asdasd
+
 	case 7:
  	Y = pow(a, 2) + c;
  	break;
  
 	case 3:
-	7
  	Y = a - (b * c);
  	break;
  	

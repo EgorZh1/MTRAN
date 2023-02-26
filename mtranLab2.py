@@ -7,14 +7,12 @@ def tokenize(code):
     ('HEADER',      r'<.*?>'),  
     ('NAMESPACE',   r'using\s+namespace\s+std;'), 
     ('TYPE',        r'int|float'),
-    ('KEYWORD',     r'cin|cout|main|return|break|case|switch|default|endl|pow'),
+    ('KEYWORD',     r'cin|cout|main|return|break|case|switch|default|endl|for|while|pow'),
     
-    ('NAME',          r'[a-zA-Z0-9_.]+'),
-    ('FLOAT',       r'\d+\.\d+'),
-    ('INT',         r'\d+'),
+    ('NAME',        r'[a-zA-Z0-9_.]+'),
     ('STREAM',      r'<<|>>'), 
     ('STRING',      r'"[^"]*"'), 
-    ('OP',          r'[+\-*/=]'),      
+    ('OP',          r'[+\-*/=<>!]'),      
     ('PUNCT',       r'[,.:;(){}]'),  
     ('WHITESPACE',  r'\s+'),    
     ('MISMATCH',    r'')
@@ -25,53 +23,71 @@ def tokenize(code):
     t=0
     dataType=''
     ver=0
-    #
+    curVer=''
+    aply=0
+    oper=0
+    
     tok_regex = '|'.join('(?P<%s>%s)' % pair for pair in token_specification)
     for mo in re.finditer(tok_regex, code):
         kind = mo.lastgroup
         value = mo.group()
-        #print("----------------")
-        #print("kind=",kind)
-        #print("value=",value)
-        #print("----------------")
+        
         if kind == 'WHITESPACE':
             pass
         elif kind == 'NAME':
             if re.match(r'^[0-9][a-zA-Z0-9_.]*$',value):
                 if re.match(r'^\d+\.\d+$',value):
+                    if aply == 1 and oper != 1:
+                        veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{curVer}','Значение':f'{value}'}
+                        aply=0
                     yield 'FLOATNEW', value
                 elif re.match(r'^\d+$',value):
+                    if aply == 1 and oper != 1:
+                        veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{curVer}','Значение':f'{value}'}
+                        aply=0
                     yield 'INTNEW', value
                 else:
                     errors+=('MISMATCH_ID',value)
                     yield 'ТЫ ЧТО НАТВОРИЛ, СМОТРИ СЮДА =>', value
             elif t == 1:
-                veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{value}'}
+                curVer=value
                 ver+=1
+                veriables[ver] = {'Тип данных':f'{dataType}','Переменная':f'{value}','Значение':'0'}
                 yield kind, value
             elif t == 0:
                 gg=0
-                for i in range(len(veriables)):
-                    if value == veriables[i]['Переменная']:
+                for key, val in veriables.items():
+                    if val['Переменная'] == value:
                         gg+=1
                 if gg == 0:
                     errors+=('MISMATCH_ID',value)
                     yield 'ТЫ ЧТО НАТВОРИЛ, СМОТРИ СЮДА =>', value
                 else:
+                    curVer=value
                     yield kind, value
             else:
-                print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
-                yield kind, value
+                pass
         elif kind == 'TYPE':
             if t == 0:
                 t=1
                 dataType=value
             yield kind, value
         elif kind == 'PUNCT':
-            if value == ';':
+            if value == ',':
+                t=1
+            else:
                 t=0
-            elif value == '{':
-                t=0
+            oper=0
+            aply=0
+            yield kind, value
+        elif kind == 'OP':
+            if value == '=':
+                aply=1
+            else:
+                if value == '<' or value == '>' or value == '!':
+                    oper=1
+                aply=0
+            
             yield kind, value
         elif kind == 'MISMATCH':
             errors+=(kind,value)
@@ -82,7 +98,7 @@ def tokenize(code):
         else:
             yield kind, value
 
-with open('IncorrectLex.txt', 'r') as file:
+with open('IncorLexC++.txt', 'r') as file:
     code = file.read()
 
 for token in tokenize(code):
