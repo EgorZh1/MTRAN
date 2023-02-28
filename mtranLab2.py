@@ -20,12 +20,15 @@ def tokenize(code):
     ]
     errors = []
     veriables= {}
+    keywords = []
+    operations = []
     t=0
     dataType=''
     ver=0
     curVer=''
     aply=0
     oper=0
+    vivod=0
     idver=0
     
     tok_regex = '|'.join('(?P<%s>%s)' % pair for pair in token_specification)
@@ -85,6 +88,7 @@ def tokenize(code):
             aply=0
             yield kind, value
         elif kind == 'OP':
+            operations+=(value)
             if value == '=':
                 aply=1
             else:
@@ -93,12 +97,35 @@ def tokenize(code):
                 aply=0
             
             yield kind, value
+        elif kind == 'KEYWORD':
+            keywords+=(kind,value)
+            yield kind, value
         elif kind == 'MISMATCH':
             errors+=(kind,value)
-            print(errors)
-            print("_______________")
-            print(veriables)
-            #raise RuntimeError(f'{value!r} unexpected')
+            print("______ERRORS______")
+            for i in range(len(errors)):
+                if i==len(errors)-1 or i == len(errors)-2:
+                    pass
+                else:
+                    print("|",errors[i]," "*(13-len(errors[i])),"|")
+                    if i%2 != 0:
+                        print("------------------")
+            print("___________________________Stored_Veriables___________________________")
+            for key in veriables:
+                print("| ",veriables[key])
+            print()
+            nonoperation = list(set(operations))
+            print("____Operations____")
+            for i in range(len(nonoperation)):
+                print("|        ",nonoperation[i]," "*(6-len(nonoperation[i])),"|")
+                print("------------------")
+            print()
+            print("____Key_Words_____")
+            nonduplicate = list(set(keywords))
+            for i in range(len(nonduplicate)):
+                if nonduplicate[i] != 'KEYWORD':
+                    print("|     ",nonduplicate[i]," "*(9-len(nonduplicate[i])),"|")
+                    print("------------------")
         else:
             yield kind, value
 
